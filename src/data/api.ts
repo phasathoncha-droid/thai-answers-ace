@@ -82,40 +82,99 @@ export function postAnswer(question: string): AnswerResponse {
   return { answer };
 }
 
-// GET /api/search
-export function searchApi(query: string): SearchResult {
-  const { answer, confidence, matchedDocs } = getAnswer(query);
-  
-  const evidence: EvidenceSnippet[] = matchedDocs.slice(0, 3).map(doc => ({
-    document_id: doc.id,
-    document_title: doc.title,
-    version: doc.version,
-    snippet: doc.extracted_text.substring(0, 150) + '...',
-    highlighted_text: doc.extracted_text.split(' ').slice(0, 10).join(' '),
-  }));
-  
-  const relatedQuestions = [
-    'เอกสารที่ต้องใช้มีอะไรบ้าง?',
-    'วงเงินกู้สูงสุดเท่าไหร่?',
-    'อัตราดอกเบี้ยเท่าไหร่?',
-    'ต้องมีคนค้ำประกันไหม?',
-  ].filter(() => Math.random() > 0.3).slice(0, 3);
-  
-  const relatedTopicIds = matchedDocs.flatMap(d => 
-    topics.filter(t => d.topic_tags.some(tag => t.name_th.includes(tag) || t.summary.includes(tag)))
-  );
-  const uniqueRelatedTopics = Array.from(new Set(relatedTopicIds.map(t => t.id)))
-    .map(id => topics.find(t => t.id === id)!)
-    .filter(Boolean)
-    .slice(0, 3);
-  
-  return {
-    answer,
-    confidence,
-    evidence,
-    related_questions: relatedQuestions,
-    related_topics: uniqueRelatedTopics.length > 0 ? uniqueRelatedTopics : topics.slice(0, 3),
-  };
+// Real API endpoint
+const QUESTION_SEARCH_API = 'https://3ciqqf1dlj.execute-api.us-east-1.amazonaws.com/api/teletubpax/question-search';
+
+// GET /api/search - Now async with real API call
+export async function searchApi(query: string): Promise<SearchResult> {
+  try {
+    const response = await fetch(QUESTION_SEARCH_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ question: query }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    // Map API response to our SearchResult format
+    const answer = data.answer || data.response || 'ไม่พบคำตอบ';
+    
+    // Fallback to mock data for related content
+    const { matchedDocs } = getAnswer(query);
+    
+    const evidence: EvidenceSnippet[] = matchedDocs.slice(0, 3).map(doc => ({
+      document_id: doc.id,
+      document_title: doc.title,
+      version: doc.version,
+      snippet: doc.extracted_text.substring(0, 150) + '...',
+      highlighted_text: doc.extracted_text.split(' ').slice(0, 10).join(' '),
+    }));
+    
+    const relatedQuestions = [
+      'เอกสารที่ต้องใช้มีอะไรบ้าง?',
+      'วงเงินกู้สูงสุดเท่าไหร่?',
+      'อัตราดอกเบี้ยเท่าไหร่?',
+      'ต้องมีคนค้ำประกันไหม?',
+    ].filter(() => Math.random() > 0.3).slice(0, 3);
+    
+    const relatedTopicIds = matchedDocs.flatMap(d => 
+      topics.filter(t => d.topic_tags.some(tag => t.name_th.includes(tag) || t.summary.includes(tag)))
+    );
+    const uniqueRelatedTopics = Array.from(new Set(relatedTopicIds.map(t => t.id)))
+      .map(id => topics.find(t => t.id === id)!)
+      .filter(Boolean)
+      .slice(0, 3);
+    
+    return {
+      answer,
+      confidence: 'high',
+      evidence,
+      related_questions: relatedQuestions,
+      related_topics: uniqueRelatedTopics.length > 0 ? uniqueRelatedTopics : topics.slice(0, 3),
+    };
+  } catch (error) {
+    console.error('Search API error:', error);
+    
+    // Fallback to mock logic on error
+    const { answer, confidence, matchedDocs } = getAnswer(query);
+    
+    const evidence: EvidenceSnippet[] = matchedDocs.slice(0, 3).map(doc => ({
+      document_id: doc.id,
+      document_title: doc.title,
+      version: doc.version,
+      snippet: doc.extracted_text.substring(0, 150) + '...',
+      highlighted_text: doc.extracted_text.split(' ').slice(0, 10).join(' '),
+    }));
+    
+    const relatedQuestions = [
+      'เอกสารที่ต้องใช้มีอะไรบ้าง?',
+      'วงเงินกู้สูงสุดเท่าไหร่?',
+      'อัตราดอกเบี้ยเท่าไหร่?',
+      'ต้องมีคนค้ำประกันไหม?',
+    ].filter(() => Math.random() > 0.3).slice(0, 3);
+    
+    const relatedTopicIds = matchedDocs.flatMap(d => 
+      topics.filter(t => d.topic_tags.some(tag => t.name_th.includes(tag) || t.summary.includes(tag)))
+    );
+    const uniqueRelatedTopics = Array.from(new Set(relatedTopicIds.map(t => t.id)))
+      .map(id => topics.find(t => t.id === id)!)
+      .filter(Boolean)
+      .slice(0, 3);
+    
+    return {
+      answer,
+      confidence,
+      evidence,
+      related_questions: relatedQuestions,
+      related_topics: uniqueRelatedTopics.length > 0 ? uniqueRelatedTopics : topics.slice(0, 3),
+    };
+  }
 }
 
 // GET /api/topics
