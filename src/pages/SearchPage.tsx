@@ -17,12 +17,17 @@ const SearchPage = () => {
   useEffect(() => {
     if (query) {
       setLoading(true);
-      // Simulate API call delay
-      setTimeout(() => {
-        const searchResult = searchApi(query);
-        setResult(searchResult);
-        setLoading(false);
-      }, 500);
+      searchApi(query)
+        .then((searchResult) => {
+          setResult(searchResult);
+        })
+        .catch((error) => {
+          console.error('Search error:', error);
+          setResult(null);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, [query]);
 
