@@ -11,6 +11,13 @@ export interface Document {
   source_url?: string;
 }
 
+export interface Category {
+  id: string;
+  name_th: string;
+  icon: string;
+  document_count: number;
+}
+
 export interface Topic {
   id: string;
   name_th: string;
@@ -19,6 +26,8 @@ export interface Topic {
   exception_bullets: string[];
   related_topic_ids: string[];
   last_updated_at: string;
+  category_id: string;
+  rule_count: number;
 }
 
 export interface ChangeEvent {
