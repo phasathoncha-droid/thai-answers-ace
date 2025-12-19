@@ -1,4 +1,17 @@
-import { Document, Topic, ChangeEvent } from './types';
+import { Document, Topic, ChangeEvent, Category } from './types';
+
+export const categories: Category[] = [
+  { id: 'cat-1', name_th: 'ผลิตภัณฑ์', icon: 'package', document_count: 156 },
+  { id: 'cat-2', name_th: 'ประกัน', icon: 'shield', document_count: 98 },
+  { id: 'cat-3', name_th: 'KPI & Incentive', icon: 'bar-chart-3', document_count: 45 },
+  { id: 'cat-4', name_th: 'Campaign', icon: 'target', document_count: 72 },
+  { id: 'cat-5', name_th: 'HR', icon: 'users', document_count: 134 },
+  { id: 'cat-6', name_th: 'Operation', icon: 'settings', document_count: 89 },
+  { id: 'cat-7', name_th: 'การตลาด', icon: 'megaphone', document_count: 63 },
+  { id: 'cat-8', name_th: 'บัญชี', icon: 'banknote', document_count: 112 },
+  { id: 'cat-9', name_th: 'สื่อความอื่นๆ', icon: 'clipboard-list', document_count: 41 },
+  { id: 'cat-10', name_th: 'รู้หรือไม่?', icon: 'lightbulb', document_count: 28 },
+];
 
 export const documents: Document[] = [
   {
@@ -207,6 +220,8 @@ export const topics: Topic[] = [
     ],
     related_topic_ids: ['topic-2', 'topic-4', 'topic-6'],
     last_updated_at: '2024-03-15T00:00:00Z',
+    category_id: 'cat-1',
+    rule_count: 5,
   },
   {
     id: 'topic-2',
@@ -225,6 +240,8 @@ export const topics: Topic[] = [
     ],
     related_topic_ids: ['topic-1', 'topic-4'],
     last_updated_at: '2024-03-01T00:00:00Z',
+    category_id: 'cat-4',
+    rule_count: 5,
   },
   {
     id: 'topic-3',
@@ -242,6 +259,8 @@ export const topics: Topic[] = [
     ],
     related_topic_ids: ['topic-1', 'topic-5'],
     last_updated_at: '2024-03-01T00:00:00Z',
+    category_id: 'cat-1',
+    rule_count: 4,
   },
   {
     id: 'topic-4',
@@ -259,6 +278,8 @@ export const topics: Topic[] = [
     ],
     related_topic_ids: ['topic-1', 'topic-2'],
     last_updated_at: '2024-01-01T00:00:00Z',
+    category_id: 'cat-6',
+    rule_count: 4,
   },
   {
     id: 'topic-5',
@@ -275,6 +296,8 @@ export const topics: Topic[] = [
     ],
     related_topic_ids: ['topic-3'],
     last_updated_at: '2024-02-01T00:00:00Z',
+    category_id: 'cat-2',
+    rule_count: 4,
   },
   {
     id: 'topic-6',
@@ -292,6 +315,8 @@ export const topics: Topic[] = [
     ],
     related_topic_ids: ['topic-1'],
     last_updated_at: '2024-01-01T00:00:00Z',
+    category_id: 'cat-8',
+    rule_count: 4,
   },
   {
     id: 'topic-7',
@@ -308,6 +333,8 @@ export const topics: Topic[] = [
     ],
     related_topic_ids: [],
     last_updated_at: '2024-03-10T00:00:00Z',
+    category_id: 'cat-6',
+    rule_count: 4,
   },
   {
     id: 'topic-8',
@@ -324,6 +351,8 @@ export const topics: Topic[] = [
     ],
     related_topic_ids: ['topic-1', 'topic-3'],
     last_updated_at: '2024-02-20T00:00:00Z',
+    category_id: 'cat-1',
+    rule_count: 4,
   },
 ];
 

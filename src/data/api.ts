@@ -1,5 +1,5 @@
-import { documents, topics, changeEvents } from './mockData';
-import { Document, Topic, ChangeEvent, SearchResult, AnswerResponse, EvidenceSnippet } from './types';
+import { documents, topics, changeEvents, categories } from './mockData';
+import { Document, Topic, ChangeEvent, SearchResult, AnswerResponse, EvidenceSnippet, Category } from './types';
 
 // Simple keyword matching for mock AI
 function getAnswer(question: string): { answer: string; confidence: 'high' | 'medium' | 'low'; matchedDocs: Document[] } {
@@ -175,6 +175,11 @@ export async function searchApi(query: string): Promise<SearchResult> {
       related_topics: uniqueRelatedTopics.length > 0 ? uniqueRelatedTopics : topics.slice(0, 3),
     };
   }
+}
+
+// GET /api/categories
+export function getCategories(): Category[] {
+  return categories;
 }
 
 // GET /api/topics
